@@ -1,0 +1,5 @@
+[cfdata.main]
+Name=cfdata
+Icon=images/icon-{0}.png
+Exec=cfdata-linux-amd64
+Type=Application
