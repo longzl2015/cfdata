@@ -1,0 +1,68 @@
+#!/bin/bash
+set -e
+
+# 使用 TRIM_APPDEST 环境变量定位应用安装目录
+# flyings: 应用会被解压到 ${TRIM_APPDEST}，而不是固定路径
+APP_ROOT="${TRIM_APPDEST:-/vol2/@appcenter/cfdata}"
+BIN="$APP_ROOT/cfdata-linux-amd64"
+PID_FILE="/var/run/cfdata.pid"
+LOG_FILE="/var/log/cfdata.log"
+
+case "$1" in
+    start)
+        echo "[cfdata] 启动中..."
+        if [ -f "$PID_FILE" ]; then
+            OLD_PID=$(cat "$PID_FILE" 2>/dev/null)
+            if [ -n "$OLD_PID" ] && kill -0 "$OLD_PID" 2>/dev/null; then
+                echo "[cfdata] 已在运行，PID=$OLD_PID"
+                exit 0
+            fi
+            rm -f "$PID_FILE"
+        fi
+
+        if [ ! -f "$BIN" ]; then
+            echo "[cfdata] 错误：二进制不存在 $BIN" >&2
+            exit 1
+        fi
+
+        chmod +x "$BIN"
+        nohup "$BIN" >> "$LOG_FILE" 2>&1 &
+        echo $! > "$PID_FILE"
+        sleep 1
+        if kill -0 $(cat "$PID_FILE") 2>/dev/null; then
+            echo "[cfdata] 启动成功，PID=$(cat "$PID_FILE")"
+            exit 0
+        else
+            echo "[cfdata] 启动失败" >&2
+            exit 1
+        fi
+        ;;
+    stop)
+        echo "[cfdata] 停止中..."
+        if [ -f "$PID_FILE" ]; then
+            PID=$(cat "$PID_FILE" 2>/dev/null)
+            if [ -n "$PID" ] && kill -0 "$PID" 2>/dev/null; then
+                kill "$PID" 2>/dev/null || true
+                sleep 1
+                kill -9 "$PID" 2>/dev/null || true
+            fi
+            rm -f "$PID_FILE"
+        fi
+        pkill -f cfdata-linux-amd64 2>/dev/null || true
+        echo "[cfdata] 已停止"
+        exit 0
+        ;;
+    status)
+        if [ -f "$PID_FILE" ]; then
+            PID=$(cat "$PID_FILE" 2>/dev/null)
+            if [ -n "$PID" ] && kill -0 "$PID" 2>/dev/null; then
+                exit 0
+            fi
+        fi
+        exit 3
+        ;;
+    *)
+        echo "用法: $0 {start|stop|status}" >&2
+        exit 1
+        ;;
+esac
