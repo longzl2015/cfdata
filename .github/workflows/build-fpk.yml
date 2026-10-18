@@ -23,7 +23,7 @@ jobs:
         run: |
           curl -fsSL -o fnpack https://static2.fnnas.com/fnpack/fnpack-1.2.3-linux-amd64
           chmod +x fnpack
-          ./fnpack --version
+          ./fnpack --help | head -5
 
       - name: 设置版本号
         run: |
