@@ -1,5 +1,13 @@
-[cfdata.main]
-Name=cfdata
-Icon=images/icon-{0}.png
-Exec=cfdata-linux-amd64
-Type=Application
+{
+  ".url": {
+    "cfdata.main": {
+      "title": "cfdata",
+      "icon": "images/icon_{0}.png",
+      "type": "iframe",
+      "protocol": "http",
+      "port": "13335",
+      "url": "/",
+      "allUsers": true
+    }
+  }
+}
