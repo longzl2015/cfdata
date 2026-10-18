@@ -1,11 +1,16 @@
 #!/bin/bash
 set -e
 
-# 使用 TRIM_APPDEST 环境变量定位应用安装目录
-APP_ROOT="${TRIM_APPDEST:-/vol2/@appcenter/cfdata}"
-BIN="$APP_ROOT/cfdata-linux-amd64"
-PID_FILE="$APP_ROOT/cfdata.pid"
-LOG_FILE="$APP_ROOT/cfdata.log"
+# 应用固定路径（参考迅雷写法，硬编码）
+APP_ROOT="/var/apps/cfdata"
+TARGET_DIR="$APP_ROOT/target"
+BIN="$TARGET_DIR/cfdata-linux-amd64"
+VAR_DIR="$APP_ROOT/var"
+PID_FILE="$VAR_DIR/cfdata.pid"
+LOG_FILE="$VAR_DIR/cfdata.log"
+
+# 确保 var 目录存在
+mkdir -p "$VAR_DIR"
 
 case "$1" in
     start)
