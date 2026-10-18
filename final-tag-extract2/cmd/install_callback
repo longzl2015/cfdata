@@ -1,0 +1,19 @@
+#!/bin/bash
+set -e
+APP_ROOT="/var/apps/cfdata"
+VAR_DIR="$APP_ROOT/var"
+CONFIG_FILE="$VAR_DIR/cfdata-config.json"
+SERVICE_PORT="${TRIM_SERVICE_PORT:-13335}"
+if [ -n "$1" ]; then
+    SERVICE_PORT="$1"
+fi
+mkdir -p "$VAR_DIR"
+cat > "$CONFIG_FILE" << EOF
+{
+  "port": $SERVICE_PORT,
+  "installed": true,
+  "installed_at": "$(date +%Y-%m-%dT%H:%M:%S)"
+}
+EOF
+echo "[cfdata] 安装回调：配置文件已生成，端口: $SERVICE_PORT"
+exit 0
