@@ -8,7 +8,7 @@
           "field": "service_port",
           "label": "服务端口",
           "type": "number",
-          "initValue": 8080,
+          "initValue": 13335,
           "rules": [
             {"required": true},
             {"min": 1, "max": 65535}

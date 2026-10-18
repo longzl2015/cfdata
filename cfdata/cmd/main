@@ -9,12 +9,12 @@ CONFIG_FILE="$VAR_DIR/cfdata-config.json"
 PID_FILE="$VAR_DIR/cfdata.pid"
 LOG_FILE="$VAR_DIR/cfdata.log"
 
-# 读取端口，默认 8080
-SERVICE_PORT=8080
+# 读取端口，默认 13335
+SERVICE_PORT=13335
 if [ -f "$CONFIG_FILE" ]; then
     SERVICE_PORT=$(grep -o '"port": [0-9]*' "$CONFIG_FILE" | grep -o '[0-9]*')
 fi
-[ -z "$SERVICE_PORT" ] && SERVICE_PORT=8080
+[ -z "$SERVICE_PORT" ] && SERVICE_PORT=13335
 
 # 确保 var 目录存在
 mkdir -p "$VAR_DIR"
