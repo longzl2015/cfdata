@@ -30,7 +30,7 @@ case "$1" in
         fi
 
         chmod +x "$BIN"
-        nohup "$BIN" >> "$LOG_FILE" 2>&1 &
+        nohup "$BIN" -port 8080 >> "$LOG_FILE" 2>&1 &
         echo $! > "$PID_FILE"
         sleep 2
         if kill -0 $(cat "$PID_FILE") 2>/dev/null; then
