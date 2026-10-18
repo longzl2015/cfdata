@@ -1,0 +1,9 @@
+appname               = cfdata
+version               = 1.0.0
+display_name          = cfdata
+service_port          = 8080
+source                = local
+platform              = x86
+desktop_uidir         = 
+desktop_applaunchname = 
+checksum              = 9ff2e9636ba1a2dc178fe66edf1e113d
