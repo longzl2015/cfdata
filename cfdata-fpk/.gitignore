@@ -1,0 +1,17 @@
+# 构建产物
+*.fpk
+*.tgz
+stage/
+pkg/
+fpk-check/
+fpk-verify/
+fpk-verify2/
+
+# 本地工具（GitHub Actions 会自动下载）
+fnpack.exe
+fnpack
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log

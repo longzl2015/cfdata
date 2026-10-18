@@ -1,0 +1,6 @@
+appname        = cfdata
+version        = 1.0.0
+display_name   = cfdata
+service_port   = 8080
+source         = local
+platform       = x86

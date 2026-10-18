@@ -1,0 +1,60 @@
+name: Build cfdata FPK
+
+on:
+  push:
+    branches: [ main ]
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '应用版本号'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build-fpk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 下载 fnpack (Linux amd64)
+        run: |
+          curl -fsSL -o fnpack https://static2.fnnas.com/fnpack/fnpack-1.2.3-linux-amd64
+          chmod +x fnpack
+          ./fnpack --version
+
+      - name: 设置版本号
+        run: |
+          if [ "${{ github.event.inputs.version }}" != "" ]; then
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_ENV
+          elif [ "${{ github.event.release.tag_name }}" != "" ]; then
+            echo "VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
+          else
+            echo "VERSION=1.0.0" >> $GITHUB_ENV
+          fi
+          echo "构建版本: $VERSION"
+
+      - name: 更新 manifest 版本
+        run: |
+          sed -i "s/^version.*/version        = ${{ env.VERSION }}/" cfdata/manifest
+          cat cfdata/manifest
+
+      - name: 执行 fnpack 打包
+        run: |
+          ./fnpack build --directory cfdata-fpk/cfdata
+
+      - name: 上传 fpk 构建产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfdata-fpk
+          path: cfdata.fpk
+          retention-days: 7
+
+      - name: 如果是 release 事件，发布 fpk 到 release
+        if: github.event.release
+        run: |
+          gh release upload ${{ github.event.release.tag_name }} cfdata.fpk
+        env:
+          GH_TOKEN: ${{ github.token }}
