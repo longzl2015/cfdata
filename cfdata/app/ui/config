@@ -1,13 +1,13 @@
 {
   ".url": {
-    "cfdata.main": {
-      "title": "cfdata",
+    "cfdata.Application": {
+      "title": "优选IP",
       "icon": "images/icon_{0}.png",
-      "type": "iframe",
+      "type": "url",
       "protocol": "http",
       "port": "13335",
       "url": "/",
-      "allUsers": true
+      "allUsers": false
     }
   }
 }
